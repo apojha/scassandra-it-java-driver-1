@@ -1,0 +1,27 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+dependencies {
+  compile files('./lib/cassandra_server_stub.jar')
+  compile     ('com.datastax.cassandra:cassandra-driver-core:1+') {
+      exclude module: 'log4j'
+      exclude module: 'slf4j-log4j12'
+  }
+  testCompile 'org.mockito:mockito-all:1.9.5'
+  testCompile 'junit:junit:4.11'
+  testCompile 'org.powermock:powermock-mockito-release-full:1.5'
+  testCompile 'org.apache.httpcomponents:httpclient:4.3.3'
+  testCompile 'com.google.code.gson:gson:2.2.4'
+}
+
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '1.11'
+}
+
+
