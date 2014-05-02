@@ -1,17 +1,28 @@
 apply plugin: 'java'
 apply plugin: 'idea'
 
+idea {
+    module {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
 repositories {
   mavenLocal()
   mavenCentral()
 }
 
 dependencies {
-  compile files('./lib/cassandra_server_stub.jar')
-  compile     ('com.datastax.cassandra:cassandra-driver-core:1+') {
-      exclude module: 'log4j'
-      exclude module: 'slf4j-log4j12'
+  repositories {
+    mavenLocal()
+    maven {
+        url "https://raw.githubusercontent.com/scassandra/scassandra-repo/master/snapshots"
+    }
+    mavenCentral()
   }
+  compile 'com.datastax.cassandra:cassandra-driver-core:1+'
+  testCompile 'org.scassandra:java-client:0.0-SNAPSHOT'
   testCompile 'org.mockito:mockito-all:1.9.5'
   testCompile 'junit:junit:4.11'
   testCompile 'org.powermock:powermock-mockito-release-full:1.5'
