@@ -69,7 +69,7 @@ public class BasicPrimingTest {
     @Test
     public void testPrimeWithRows() {
         String query = "select * from people";
-        Map<String, String> row = ImmutableMap.of("name", "Chris");
+        Map<String, Object> row = ImmutableMap.of("name", (Object)"Chris");
         PrimingRequest prime = PrimingRequest.builder()
                 .withQuery(query)
                 .withRows(row)
