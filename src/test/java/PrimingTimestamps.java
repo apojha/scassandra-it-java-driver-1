@@ -57,12 +57,12 @@ public class PrimingTimestamps {
         System.out.println(now + " ::: " + nowAsDate);
         Map<String, Object> row = ImmutableMap.of("atimestamp", (Object) new Long(nowAsDate.getTime()));
         Map<String, ColumnTypes> types = ImmutableMap.of("atimestamp", ColumnTypes.Timestamp);
-        PrimingRequest prime = PrimingRequest.builder()
+        PrimingRequest prime = PrimingRequest.queryBuilder()
                 .withQuery(query)
                 .withRows(row)
                 .withColumnTypes(types)
                 .build();
-        primingClient.prime(prime);
+        primingClient.primeQuery(prime);
 
         Session keyspace = cluster.connect("keyspace");
         ResultSet result = keyspace.execute(query);

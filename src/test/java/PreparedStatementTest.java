@@ -1,4 +1,6 @@
 import com.datastax.driver.core.*;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -7,6 +9,10 @@ import org.scassandra.Scassandra;
 import org.scassandra.ScassandraFactory;
 import org.scassandra.http.client.ActivityClient;
 import org.scassandra.http.client.PrimingClient;
+import org.scassandra.http.client.PrimingRequest;
+
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -40,15 +46,36 @@ public class PreparedStatementTest {
     }
 
     @Test
-    public void testPreparePreparedStatement() {
+    public void preparedStatementWithoutPriming() {
         //given
         //when
         Session keyspace = cluster.connect("keyspace");
-        PreparedStatement prepare = keyspace.prepare("Select * from people where name = ?");
+        PreparedStatement prepare = keyspace.prepare("select * from people where name = ?");
         BoundStatement boundStatement = prepare.bind("Chris");
         ResultSet results = keyspace.execute(boundStatement);
         //then
         assertEquals(0, results.all().size());
+    }
+
+    @Test
+    public void primeAndExecuteAPreparedStatement() {
+        //given
+        Map<String, String> row = ImmutableMap.of("name", "Chris");
+        primingClient.primePreparedStatement(PrimingRequest.preparedStatementBuilder()
+                .withQuery("select * from people where name = ?")
+                .withRows(row)
+                .build());
+        Session keyspace = cluster.connect("keyspace");
+
+        //when
+        PreparedStatement prepare = keyspace.prepare("select * from people where name = ?");
+        BoundStatement boundStatement = prepare.bind("Chris");
+        ResultSet results = keyspace.execute(boundStatement);
+
+        //then
+        List<Row> asList = results.all();
+        assertEquals(1, asList.size());
+        assertEquals("Chris", asList.get(0).getString("name"));
     }
 
 }

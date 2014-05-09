@@ -70,11 +70,11 @@ public class BasicPrimingTest {
     public void testPrimeWithRows() {
         String query = "select * from people";
         Map<String, Object> row = ImmutableMap.of("name", (Object)"Chris");
-        PrimingRequest prime = PrimingRequest.builder()
+        PrimingRequest prime = PrimingRequest.queryBuilder()
                 .withQuery(query)
                 .withRows(row)
                 .build();
-        primingClient.prime(prime);
+        primingClient.primeQuery(prime);
 
         Session keyspace = cluster.connect("keyspace");
         ResultSet result = keyspace.execute(query);

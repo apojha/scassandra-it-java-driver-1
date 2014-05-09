@@ -56,12 +56,12 @@ public class MetaDataPriming {
         row.put("data_center","dc1");
         row.put("tokens", Sets.newHashSet("1743244960790844724"));
         row.put("rack","rc1");
-        PrimingRequest prime = PrimingRequest.builder()
+        PrimingRequest prime = PrimingRequest.queryBuilder()
                 .withQuery(query)
                 .withColumnTypes(columnTypes)
                 .withRows(row)
                 .build();
-        primingClient.prime(prime);
+        primingClient.primeQuery(prime);
 
         //when
         cluster = Cluster.builder().addContactPoint("localhost")
