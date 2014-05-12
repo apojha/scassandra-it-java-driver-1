@@ -1,6 +1,10 @@
-*.ipr
 *.iws
-out
-.gradle
-build
+*.ipr
 *.iml
+.gradle
+out
+build
+gradle
+.idea
+classes
+*.bat

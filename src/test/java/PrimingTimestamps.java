@@ -26,8 +26,8 @@ public class PrimingTimestamps {
     public static final int adminPort = 2345;
     private static Cluster cluster;
     public static Scassandra scassandraServer = ScassandraFactory.createServer(binaryPort, adminPort);
-    public static PrimingClient primingClient = new PrimingClient("localhost", adminPort);
-    public static final ActivityClient activityClient = new ActivityClient("localhost", adminPort);
+    public static PrimingClient primingClient = PrimingClient.builder().withPort(adminPort).build();
+    public static final ActivityClient activityClient = ActivityClient.builder().withAdminPort(adminPort).build();
 
     @BeforeClass
     public static void setup() throws Exception {

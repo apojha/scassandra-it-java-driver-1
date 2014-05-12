@@ -23,8 +23,8 @@ public class MetaDataPriming {
     public static final String CUSTOM_CLUSTER_NAME = "custom cluster name";
     private static Cluster cluster;
     public static Scassandra scassandraServer = ScassandraFactory.createServer(binaryPort, adminPort);
-    public static PrimingClient primingClient = new PrimingClient("localhost", adminPort);
-    public static final ActivityClient activityClient = new ActivityClient("localhost", adminPort);
+    private static PrimingClient primingClient = PrimingClient.builder().withPort(adminPort).build();
+    private static ActivityClient activityClient = ActivityClient.builder().withAdminPort(adminPort).build();
 
     @BeforeClass
     public static void setup() throws Exception {

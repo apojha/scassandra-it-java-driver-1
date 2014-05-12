@@ -20,9 +20,10 @@ public class PreparedStatementTest {
     public static final int binaryPort = 4566;
     public static final int adminPort = 2344;
     private static Cluster cluster;
-    public static Scassandra scassandraServer = ScassandraFactory.createServer(binaryPort, adminPort);
-    public static PrimingClient primingClient = new PrimingClient("localhost", adminPort);
-    public static final ActivityClient activityClient = new ActivityClient("localhost", adminPort);
+
+    private static Scassandra scassandraServer = ScassandraFactory.createServer(binaryPort, adminPort);
+    private static PrimingClient primingClient = PrimingClient.builder().withPort(adminPort).build();
+    private static final ActivityClient activityClient = ActivityClient.builder().withAdminPort(adminPort).build();
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -30,7 +31,6 @@ public class PreparedStatementTest {
         cluster = Cluster.builder().addContactPoint("localhost")
                 .withPort(binaryPort).build();
     }
-
 
     @AfterClass
     public static void shutdown() {
@@ -48,8 +48,8 @@ public class PreparedStatementTest {
     @Test
     public void preparedStatementWithoutPriming() {
         //given
-        //when
         Session keyspace = cluster.connect("keyspace");
+        //when
         PreparedStatement prepare = keyspace.prepare("select * from people where name = ?");
         BoundStatement boundStatement = prepare.bind("Chris");
         ResultSet results = keyspace.execute(boundStatement);

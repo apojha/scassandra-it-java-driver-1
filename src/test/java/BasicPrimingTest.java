@@ -25,8 +25,8 @@ public class BasicPrimingTest {
     public static final int adminPort = 2345;
     private static Cluster cluster;
     public static Scassandra scassandraServer = ScassandraFactory.createServer(binaryPort, adminPort);
-    public static PrimingClient primingClient = new PrimingClient("localhost", adminPort);
-    public static final ActivityClient activityClient = new ActivityClient("localhost", adminPort);
+    private static PrimingClient primingClient = PrimingClient.builder().withPort(adminPort).build();
+    private static ActivityClient activityClient = ActivityClient.builder().withAdminPort(adminPort).build();
 
     @BeforeClass
     public static void setup() throws Exception {
@@ -52,8 +52,8 @@ public class BasicPrimingTest {
 
     @Test
     public void testUseAndSimpleQueryWithNoPrime() {
-        Query expectedUseKeyspace = new Query("use anykeyspace", "ONE");
-        Query expectedSelect = new Query("select * from people", "ONE");
+        Query expectedUseKeyspace = Query.builder().withQuery("use anykeyspace").withConsistency("ONE").build();
+        Query expectedSelect = Query.builder().withQuery("select * from people").withConsistency("ONE").build();
 
 
         Session keyspace = cluster.connect("anykeyspace");
